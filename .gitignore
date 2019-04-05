@@ -5,4 +5,4 @@ local*.sh
 .idea
 __pycache__/
 **/*/__pycache__
-
+*.pyc
