@@ -10,8 +10,8 @@
   pre_tasks:
     - debug: msg="Pre tasks section"
 
-    - name: ANSIBLE PYTHON | install python 2
-      raw: test -e /usr/bin/python || (apt -qqy update && apt install -qy python-minimal)
+    - name: ANSIBLE PYTHON | install python fallback if needed
+      raw: test -e /usr/bin/python || test -e /usr/bin/python3 || (apt -qqy update && apt install -qy python-minimal)
       become: yes
 
     - name:  UNPRIVILEGED USERS | Get acl dependency (ansible unprivileged user operations magic)
@@ -21,15 +21,21 @@
     - name: gather facts
       setup:
 
-#    - name: Include common pretasks
-#      include_tasks: "{{shared_dir}}/common_pretasks.yml"
-#      tags: always
+    - name: Check for common pretasks
+      local_action: stat path="{{shared_dir}}/common_pretasks.yml"
+      register: common_pretasks_exists
+      tags: always
+
+    - name: Include common pretasks
+      include_tasks: "{{shared_dir}}/common_pretasks.yml"
+      when: common_pretasks_exists.stat.exists == true
+      tags: always
 
 
   roles:
 
      - {
-        role: "sa-vpn-softether"
+        role: "sa_role"
        }
 
 
