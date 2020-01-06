@@ -95,6 +95,8 @@ platforms:
   #   box: centos/6
   #- name: centos7
   #  box: centos/7
+  #- name: centos8
+  #  box: centos/8
   # - name: fedora28
   #   box: generic/fedora28
   # - name: alpine
