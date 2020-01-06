@@ -1,7 +1,7 @@
-sa-nginx
+sa_falco
 ========
 
-[![Build Status](https://travis-ci.org/softasap/sa-nginx.svg?branch=master)](https://travis-ci.org/softasap/sa-nginx)
+[![Build Status](https://travis-ci.com/softasap/sa_falco.svg?branch=master)](https://travis-ci.com/softasap/sa_falco)
 
 
 Example of usage:
@@ -11,7 +11,7 @@ Simple
 ```YAML
 
      - {
-         role: "sa-nginx"
+         role: "sa_falco"
        }
 
 
@@ -21,29 +21,9 @@ Advanced
 
 ```YAML
 
-nginx_conf_properties:
-  - {
-      regexp: "^daemon *",
-      line: "daemon off;",
-      insertbefore: "BOF"
-    }
-  - {
-      regexp: "^worker_processes *",
-      line: "worker_processes auto;",
-      insertbefore: "BOF"
-    }
-  - {
-      regexp: "^pid *",
-      line: "pid {{nginx_pid_dir}}/nginx.pid;",
-      insertbefore: "BOF"
-    }
-
-
-
-
+roles:
      - {
-         role: "sa-nginx",
-         nginx_conf_properties: "{{nginx_conf_properties}}"
+         role: "sa_falco"
        }
 
 
@@ -54,20 +34,20 @@ nginx_conf_properties:
 Usage with ansible galaxy workflow
 ----------------------------------
 
-If you installed the `sa-nginx` role using the command
+If you installed the `sa_falco` role using the command
 
 
 `
-   ansible-galaxy install softasap.sa-nginx
+   ansible-galaxy install softasap.sa_falco
 `
 
-the role will be available in the folder `library/softasap.sa-nginx`
+the role will be available in the folder `softasap.sa_falco`
 Please adjust the path accordingly.
 
 ```YAML
 
      - {
-         role: "softasap.sa-nginx"
+         role: "softasap.sa_falco"
        }
 
 ```
