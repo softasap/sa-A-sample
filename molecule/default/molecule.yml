@@ -118,5 +118,8 @@ verifier:
   name: testinfra
   env:
     PYTHONWARNINGS: "ignore:.*U.*mode is deprecated:DeprecationWarning"
-  lint:
-    name: flake8
+  lint: |
+    set -e
+    yamllint .
+    ansible-lint
+    flake8
