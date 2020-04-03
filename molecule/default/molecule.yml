@@ -61,6 +61,9 @@ platforms:
     box: ubuntu/bionic64
     memory: 4096
     cpus: 2
+#    groups:
+#      - groupname
+
     # optional - box is accesible from your real network
 #    interfaces:
 #      - network_name: private_network
