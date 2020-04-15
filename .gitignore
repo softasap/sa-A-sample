@@ -17,4 +17,6 @@ roles/**/.gitignore
 roles/**/Pipfile*
 roles/**/.ansible-lint
 *.bak
-
+*.gz
+*.tar.gz
+*.tgz
