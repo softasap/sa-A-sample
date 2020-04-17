@@ -8,7 +8,7 @@ on:
       - github-workflow
 
     tags:
-      - *
+      - "*"
   # Run tests for any PRs.
   pull_request:
 
