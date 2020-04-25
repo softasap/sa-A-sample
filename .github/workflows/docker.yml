@@ -21,12 +21,83 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        include:
+          # - distribution='ubuntu'
+          #   version='14.04'
+          #   init='/sbin/init'
+          #   run_opts=''
+          #   playbook='test.yml'
+          - distribution='ubuntu'
+            version='16.04'
+            init='/sbin/init'
+            run_opts='--security-opt seccomp=unconfined --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro'
+            playbook='test.yml'
+          - distribution='ubuntu'
+            version='18.04'
+            init='/sbin/init'
+            run_opts='--security-opt seccomp=unconfined --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro'
+            playbook='test.yml'
+        #  - distribution='fedora'
+        #    version='25'
+        #    init='/usr/sbin/init'
+        #    run_opts='--security-opt seccomp=unconfined --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro'
+        #    playbook='test.yml'
+        #  - distribution='fedora'
+        #    version='26'
+        #    init='/usr/sbin/init'
+        #    run_opts='--security-opt seccomp=unconfined --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro'
+        #    playbook='test.yml'
+        #  - distribution='fedora'
+        #    version='27'
+        #    init='/usr/sbin/init'
+        #    run_opts='--security-opt seccomp=unconfined --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro'
+        #    playbook='test.yml'
+        #  - distribution='fedora'
+        #    version='28'
+        #    init='/usr/sbin/init'
+        #    run_opts='--security-opt seccomp=unconfined --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro'
+        #    playbook='test.yml'
+          - distribution='centos'
+            version='8'
+            init='/usr/lib/systemd/systemd'
+            run_opts='--privileged'
+            playbook='test.yml'
+          - distribution='centos'
+            version='7'
+            init='/usr/lib/systemd/systemd'
+            run_opts='--privileged'
+            playbook='test.yml'
+          # - distribution: centos
+          #   version: 6
+          #   init: /sbin/init
+          #   run_opts: "--privileged"
+          #   playbook: test.yml
+        #  - distribution: alpine
+        #    version: 3.4
+        #    init: /sbin/init
+        #    playbook: test.yml
+        #  - distribution: alpine
+        #    version: 3.5
+        #    init: /sbin/init
+        #    playbook: test.yml
+        #  - distribution: alpine
+        #    version: 3.6
+        #    init: /sbin/init
+        #    playbook: test.yml
+        #  - distribution: alpine
+        #    version: 3.7
+        #    init: /sbin/init
+        #    playbook: test.yml
+
+
     steps:
       - uses: actions/checkout@v2
 
       - name: Run tests
         run: echo TBD
-  push-1604:
+  push-ubuntu-16-04:
     # Ensure test job passes before pushing image.
     needs: test
 
@@ -36,7 +107,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build 14.04 image
+      - name: Build image
         run: cd tests && docker build . --file Dockerfile.ubuntu-16.04 --tag image
 
       - name: Log into registry
@@ -45,7 +116,6 @@ jobs:
       - name: Push image
         run: |
           IMAGE_ID=docker.io/softasap/ansible-role-acceptance
-          
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           # Strip git ref prefix from version
@@ -56,5 +126,284 @@ jobs:
           [ "$VERSION" == "master" ] && VERSION=latest
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
-          docker tag image $IMAGE_ID:$VERSION
-          docker push $IMAGE_ID:$VERSION
+          docker tag image $IMAGE_ID:$VERSION-3-ubuntu-16.04
+          docker push $IMAGE_ID:$VERSION-3-ubuntu-16.04
+  push-ubuntu-18-04:
+    # Ensure test job passes before pushing image.
+    needs: test
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        run: cd tests && docker build . --file Dockerfile.ubuntu-18.04 --tag image
+
+      - name: Log into registry
+        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login docker.io -u ${{ secrets.DOCKER_USER }} --password-stdin
+
+      - name: Push image
+        run: |
+          IMAGE_ID=docker.io/softasap/ansible-role-acceptance
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag image $IMAGE_ID:$VERSION-3-ubuntu-18.04
+          docker push $IMAGE_ID:$VERSION-3-ubuntu-18.04
+  push-fedora-25:
+    # Ensure test job passes before pushing image.
+    needs: test
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        run: cd tests && docker build . --file Dockerfile.fedora-25 --tag image
+
+      - name: Log into registry
+        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login docker.io -u ${{ secrets.DOCKER_USER }} --password-stdin
+
+      - name: Push image
+        run: |
+          IMAGE_ID=docker.io/softasap/ansible-role-acceptance
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag image $IMAGE_ID:$VERSION-3-fedora-25
+          docker push $IMAGE_ID:$VERSION-3-fedora-25
+  push-fedora-26:
+    # Ensure test job passes before pushing image.
+    needs: test
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        run: cd tests && docker build . --file Dockerfile.fedora-26 --tag image
+
+      - name: Log into registry
+        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login docker.io -u ${{ secrets.DOCKER_USER }} --password-stdin
+
+      - name: Push image
+        run: |
+          IMAGE_ID=docker.io/softasap/ansible-role-acceptance
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag image $IMAGE_ID:$VERSION-3-fedora-26
+          docker push $IMAGE_ID:$VERSION-3-fedora-26
+  push-fedora-27:
+    # Ensure test job passes before pushing image.
+    needs: test
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        run: cd tests && docker build . --file Dockerfile.fedora-27 --tag image
+
+      - name: Log into registry
+        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login docker.io -u ${{ secrets.DOCKER_USER }} --password-stdin
+
+      - name: Push image
+        run: |
+          IMAGE_ID=docker.io/softasap/ansible-role-acceptance
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag image $IMAGE_ID:$VERSION-3-fedora-27
+          docker push $IMAGE_ID:$VERSION-3-fedora-27
+  push-fedora-28:
+    # Ensure test job passes before pushing image.
+    needs: test
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        run: cd tests && docker build . --file Dockerfile.fedora-28 --tag image
+
+      - name: Log into registry
+        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login docker.io -u ${{ secrets.DOCKER_USER }} --password-stdin
+
+      - name: Push image
+        run: |
+          IMAGE_ID=docker.io/softasap/ansible-role-acceptance
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag image $IMAGE_ID:$VERSION-3-fedora-28
+          docker push $IMAGE_ID:$VERSION-3-fedora-28
+  push-fedora-29:
+    # Ensure test job passes before pushing image.
+    needs: test
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        run: cd tests && docker build . --file Dockerfile.fedora-29 --tag image
+
+      - name: Log into registry
+        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login docker.io -u ${{ secrets.DOCKER_USER }} --password-stdin
+
+      - name: Push image
+        run: |
+          IMAGE_ID=docker.io/softasap/ansible-role-acceptance
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag image $IMAGE_ID:$VERSION-3-fedora-29
+          docker push $IMAGE_ID:$VERSION-3-fedora-29
+  push-centos-6:
+    # Ensure test job passes before pushing image.
+    needs: test
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        run: cd tests && docker build . --file Dockerfile.centos-6 --tag image
+
+      - name: Log into registry
+        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login docker.io -u ${{ secrets.DOCKER_USER }} --password-stdin
+
+      - name: Push image
+        run: |
+          IMAGE_ID=docker.io/softasap/ansible-role-acceptance
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag image $IMAGE_ID:$VERSION-3-centos-6
+          docker push $IMAGE_ID:$VERSION-3-centos-6
+  push-centos-7:
+    # Ensure test job passes before pushing image.
+    needs: test
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        run: cd tests && docker build . --file Dockerfile.centos-7 --tag image
+
+      - name: Log into registry
+        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login docker.io -u ${{ secrets.DOCKER_USER }} --password-stdin
+
+      - name: Push image
+        run: |
+          IMAGE_ID=docker.io/softasap/ansible-role-acceptance
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag image $IMAGE_ID:$VERSION-3-centos-7
+          docker push $IMAGE_ID:$VERSION-3-centos-7
+  push-centos-8:
+    # Ensure test job passes before pushing image.
+    needs: test
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        run: cd tests && docker build . --file Dockerfile.centos-8 --tag image
+
+      - name: Log into registry
+        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login docker.io -u ${{ secrets.DOCKER_USER }} --password-stdin
+
+      - name: Push image
+        run: |
+          IMAGE_ID=docker.io/softasap/ansible-role-acceptance
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag image $IMAGE_ID:$VERSION-3-centos-8
+          docker push $IMAGE_ID:$VERSION-3-centos-8
