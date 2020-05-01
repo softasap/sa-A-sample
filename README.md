@@ -3,7 +3,6 @@ sa_falco
 
 [![Build Status](https://travis-ci.com/softasap/sa_falco.svg?branch=master)](https://travis-ci.com/softasap/sa_falco)
 
-
 Example of usage:
 
 Simple
@@ -52,6 +51,14 @@ Please adjust the path accordingly.
 
 ```
 
+
+
+##Checkers:
+
+https://github.com/adrienverge/yamllint
+yamllint -c yamllint.yml
+
+ansible-lint
 
 
 
