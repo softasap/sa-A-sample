@@ -75,4 +75,4 @@ Join gitter discussion channel at [Gitter](https://gitter.im/softasap)
 
 Discover other roles at  http://www.softasap.com/roles/registry_generated.html
 
-visit our blog at http://www.softasap.com/blog/archive.html 
+visit our blog at http://www.softasap.com/blog/archive.html

@@ -12,8 +12,8 @@ RUN sudo apt-get update -q \
         libssl-dev \
         zlib1g-dev \
         libpq-dev \
-        openssl \ 
-        libffi-dev \  
+        openssl \
+        libffi-dev \
         software-properties-common
 RUN sudo add-apt-repository -y ppa:deadsnakes/ppa
 RUN sudo apt-get -y update
