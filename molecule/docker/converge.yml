@@ -8,8 +8,22 @@
 
   pre_tasks:
     - debug: var="role_under_test"
-  vars:
-    ansible_python_interpreter: auto
+    - debug: var="ansible_os_family"
+
+    - name: Update and upgrade apt packages
+      apt:
+        upgrade: no
+        update_cache: yes
+        cache_valid_time: 86400 #One day
+      when: ansible_os_family == "Debian"
+ 
+    - name: Install default ubuntu packages
+      apt:
+        name:
+          - gpg-agent
+        state: present
+      when: ansible_os_family == "Debian"
+   
 #  roles:
 #    - {
 #        role: "{{ role_under_test | default('role_under_test') }}",

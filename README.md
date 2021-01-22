@@ -2,6 +2,7 @@ sa_falco
 ========
 
 [![Build Status](https://travis-ci.com/softasap/sa_falco.svg?branch=master)](https://travis-ci.com/softasap/sa_falco)
+[![Build Status](https://github.com/softasap/sa_borg_server/workflows/CI/badge.svg?event=push)](https://github.com/softasap/sa_borg_server/actions?query=workflow%3ACI)
 
 Example of usage:
 
