@@ -7,6 +7,10 @@ name: CI
       - master
       - develop
       - '!release/*'
+      - 'feature*'
+      - 'hotfix*'
+      - 'bugfix*'
+      - 'local*'
   schedule:
     - cron: "10 5 * * 2"
 
@@ -31,7 +35,7 @@ jobs:
           python-version: '3.6'
 
       - name: Install test dependencies.
-        run: pip3 install yamllint ansible-lint
+        run: pip3 install yamllint ansible-lint ansible==2.9.6
 
       - name: Lint code.
         run: |
