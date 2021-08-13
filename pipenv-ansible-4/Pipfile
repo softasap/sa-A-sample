@@ -16,4 +16,4 @@ molecule-ec2 = "*"
 python-vagrant = "*"
 
 [requires]
-python_version = "3"
+python_version = "3.6"
