@@ -1,7 +1,8 @@
-init-local:
-	PIPENV_NO_INHERIT=True  pipenv --python=$(shell conda run -n py39 which python) --no-site-package
-lint-sarif:
-	ansible-lint -f sarif > result.sarif
+init:
+	pipenv install --python 3
+
+vagrant-login:
+	molecule login -s default
 
 update-from-requirements:
 	pipenv install -r ./molecule/requirements-dev.txt
@@ -25,7 +26,3 @@ molecule-docker-beaver:
 molecule-docker-focal:
 	ansible-galaxy collection install community.docker
 	MOLECULE_DISTRO=ubuntu2004 MOLECULE_TEST_ROLE=$(notdir $(CURDIR)) molecule converge -s docker
-
-molecule-docker-jammy:
-	ansible-galaxy collection install community.docker
-	MOLECULE_DISTRO=ubuntu2204 MOLECULE_TEST_ROLE=$(notdir $(CURDIR)) molecule converge -s docker

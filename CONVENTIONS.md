@@ -29,5 +29,3 @@ usually goal is the word after tasks_, in tasks file name, like GIT for tasks_gi
 
 When calling a module, do not pass arguments in the same line inline,
 prefer yaml style with sub-nodes.
-
-

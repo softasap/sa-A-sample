@@ -1,79 +1,65 @@
-sa_falco
-========
+sa_docker
+=========
 
-[![Build Status](https://github.com/softasap/sa_borg_server/workflows/CI/badge.svg?event=push)](https://github.com/softasap/sa_borg_server/actions?query=workflow%3ACI)
-![Version on Galaxy](https://img.shields.io/badge/dynamic/json?style=flat&label=galaxy&prefix=v&url=https://galaxy.ansible.com/api/v1/roles/softasap/sa-docker/&query=latest_version.version)
+[![Build Status](https://travis-ci.org/softasap/sa-docker.svg?branch=master)](https://travis-ci.org/softasap/sa-docker)
+[![Build Status](https://github.com/softasap/sa-docker/workflows/CI/badge.svg?event=push)](https://github.com/softasap/sa-docker/actions?query=workflow%3ACI)
 
-Example of usage:
+Installs basic docker packages (via Omnibus installer) & optional docker-compose
+
+Example of usage (all parameters are optional)
 
 Simple
 
 ```YAML
-
-     - {
-         role: "sa_falco"
-       }
-
-
+  roles:
+    - {
+        role: "sa_docker"
+      }
 ```
 
-Advanced
+
+Advanced (all params optional):
+
 
 ```YAML
-
-roles:
-     - {
-         role: "sa_falco"
-       }
-
-
+  roles:
+    - {
+        role: "sa_docker",
+        option_install_docker_compose: true,
+        docker_compose_venv_directory: /home/slavko/venv/dockerenv
+      }
 ```
-
 
 
 Usage with ansible galaxy workflow
 ----------------------------------
 
-If you installed the `sa_falco` role using the command
+If you installed the sa_docker  role using the command
 
 
 `
-   ansible-galaxy install softasap.sa_falco
+   ansible-galaxy install softasap.sa_docker
 `
 
-the role will be available in the folder `softasap.sa_falco`
+the role will be available in the folder library/sa_docker
+
 Please adjust the path accordingly.
 
 ```YAML
 
      - {
-         role: "softasap.sa_falco"
+         role: "softasap.sa_docker"
        }
 
 ```
-
-
-
-##Checkers:
-
-https://github.com/adrienverge/yamllint
-yamllint -c yamllint.yml
-
-ansible-lint
 
 
 
 Copyright and license
 ---------------------
 
-Code is dual licensed under the [BSD 3 clause] (https://opensource.org/licenses/BSD-3-Clause) and the [MIT License] (http://opensource.org/licenses/MIT). Choose the one that suits you best.
-
-Reach us:
+Code licensed under the [BSD 3 clause] (https://opensource.org/licenses/BSD-3-Clause) or the [MIT License] (http://opensource.org/licenses/MIT).
 
 Subscribe for roles updates at [FB] (https://www.facebook.com/SoftAsap/)
 
-Join gitter discussion channel at [Gitter](https://gitter.im/softasap)
-
-Discover other roles at  http://www.softasap.com/roles/registry_generated.html
-
-visit our blog at http://www.softasap.com/blog/archive.html
+Join Gitter channel at [Gitter] (https://gitter.im/softasap/)
