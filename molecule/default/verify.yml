@@ -1,0 +1,37 @@
+---
+# Generic verify playbook. Extend with role-specific assertions.
+# Runs as part of `molecule test` after converge + idempotence.
+- name: Verify role under test
+  hosts: all
+  gather_facts: true
+  become: true
+  tasks:
+    - name: Verify | Display role under test
+      ansible.builtin.debug:
+        var: role_under_test
+
+    # --- Role-specific assertions go below. Examples: ---
+    #
+    # - name: Verify | Package is installed
+    #   ansible.builtin.package_facts:
+    #     manager: auto
+    #
+    # - name: Verify | Assert package present
+    #   ansible.builtin.assert:
+    #     that:
+    #       - "'mypackage' in ansible_facts.packages"
+    #     fail_msg: "mypackage is not installed"
+    #
+    # - name: Verify | Service is enabled
+    #   ansible.builtin.service_facts:
+    #
+    # - name: Verify | Assert service enabled
+    #   ansible.builtin.assert:
+    #     that:
+    #       - ansible_facts.services['myservice.service'].status == 'enabled'
+    #     fail_msg: "myservice is not enabled"
+    #   when: ansible_facts.services['myservice.service'] is defined
+    #
+    # NOTE: run privileged checks with become (already set on this play)
+    # and use absolute binary paths (/usr/sbin/...) — the vagrant user's
+    # PATH does not include sbin directories.

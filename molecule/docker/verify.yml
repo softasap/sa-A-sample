@@ -1,0 +1,29 @@
+---
+# Generic verify playbook for the docker scenario.
+# Extend with role-specific assertions (same shape as
+# molecule/default/verify.yml, minus service checks — containers
+# typically lack systemd as PID 1).
+- name: Verify role under test (docker)
+  hosts: all
+  gather_facts: true
+  become: true
+  tasks:
+    - name: Verify | Display role under test
+      ansible.builtin.debug:
+        var: role_under_test
+
+    # --- Role-specific assertions go below. Examples: ---
+    #
+    # - name: Verify | Package is installed
+    #   ansible.builtin.package_facts:
+    #     manager: auto
+    #
+    # - name: Verify | Assert package present
+    #   ansible.builtin.assert:
+    #     that:
+    #       - "'mypackage' in ansible_facts.packages"
+    #     fail_msg: "mypackage is not installed"
+    #
+    # NOTE: run privileged checks with become (already set on this play)
+    # and use absolute binary paths (/usr/sbin/...) — the container
+    # user's PATH may not include sbin directories.
